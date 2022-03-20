@@ -1,0 +1,82 @@
+version: '3.1'
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false
+
+services:
+  web:
+    image: odoo:14.0
+    container_name: work-boxx-app
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./addons:/mnt/extra-addons
+    environment:
+      - PASSWORD_FILE=/run/secrets/postgresql_password
+    secrets:
+      - postgresql_password
+    labels:
+      - traefik.http.routers.blog.rule=Host(`${BOXX_APP_URL}`)
+      - traefik.http.routers.blog.tls=true
+      - traefik.http.routers.blog.tls.certresolver=lets-encrypt
+      - traefik.port=8069
+    networks:
+      - internal
+      - web
+      
+  db:
+    image: postgres:13
+    container_name: work-boxx-db
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+    secrets:
+      - postgresql_password
+    networks:
+      - internal
+      - web
+
+  pgadmin:
+    container_name: work-boxx-pgadmin
+    image: dpage/pgadmin4
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-owen@qubeanalytica.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'True'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    labels:
+      - traefik.http.routers.adminer.rule=Host(`${BOXX_DB_ADMIN_URL}`)
+      - traefik.http.routers.adminer.tls=true
+      - traefik.http.routers.adminer.tls.certresolver=lets-encrypt
+      - traefik.port=5050
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - internal
+      - web
+    env_file:
+      - $PWD/.env
+    restart: unless-stopped
+
+volumes:
+  odoo-web-data:
+  odoo-db-data:
+  pgadmin:
+
+secrets:
+  postgresql_password:
+    file: odoo_pg_pass
