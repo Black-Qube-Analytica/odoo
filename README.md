@@ -115,7 +115,13 @@ cd ../odoo
 mv .env.example .env && nano .env
 ```
 
-14; Spin up the servers
+14; Change your PostgreSQL database password
+
+```bash
+cd odoo && nano odoo_pg_pass
+```
+
+15; Spin up the servers
 
 ```bash
 docker-compose up -d
