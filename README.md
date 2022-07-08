@@ -11,7 +11,7 @@ This repo helps you to quickly host your own cloud instance of Odoo. Odoo is a s
 
 ## Step-by-step guide
 
-1; Create apps directory that will have two dirs inside - odoo and net
+1; Create apps directory that will have two directories inside - odoo and net
 
 ```bash
 mkdir -p apps/{odoo,net}
@@ -29,7 +29,7 @@ cd apps/odoo && git clone https://github.com/Black-Qube-Analytica/odoo.git .
 mv net/* ../net/
 ```
 
-4; Odoo uses Traefik as a reverse proxy. Before you get the Traefik container up and running, set up an encrypted password for the monitoring dashboard. Read more about the Traefik dashboard [here](https://www.odoo.com/). We can use htpasswd for this. First, install the utility, which is included in the apache2-utils package:
+4; The set-up uses Traefik as a reverse proxy. Before you get the Traefik container up and running, set up an encrypted password for a monitoring dashboard. Read more about the Traefik dashboard [here](https://doc.traefik.io/traefik/operations/dashboard/). We can use htpasswd for this. First, install the utility, which is included in the apache2-utils package:
 
 ```bash
 sudo apt-get install apache2-utils
@@ -118,7 +118,7 @@ mv .env.example .env && nano .env
 14; Change your PostgreSQL database password
 
 ```bash
-cd odoo && nano odoo_pg_pass
+nano odoo_pg_pass
 ```
 
 15; Spin up the servers
