@@ -47,7 +47,9 @@ htpasswd -nb admin some_secure_password_here
 admin:$apr1$ruca84Hq$mbjdMZBAG.KWn7vfN/SNK/
 ```
 
-7; Open traefik_dynamic.toml and past it there:
+Take note of this password, you'll use it in the next step.
+
+7; Open traefik_dynamic.toml and past it there (where it says admin:<pass_goes_here>):
 
 ```bash
 cd ../net && nano traefik_dynamic.toml
@@ -58,7 +60,7 @@ traefik_dynamic.toml will look like below with the password encrypted
 ```bash
 [http.middlewares.simpleAuth.basicAuth]
   users = [
-    "admin:$apr1$ruca84Hq$mbjdMZBAG.KWn7vfN/SNK/"
+    "admin:<pass_goes_here>"
   ]
 
 [http.routers.api]
@@ -103,25 +105,36 @@ docker run -d \
   traefik:v2.2
 ```
 
-12; Go to odoo directory
+12; Confirm that the container has been successfully created
+
+```bash
+docker ps
+```
+
+You should see a running container with name traefik
+
+13; Go to odoo directory
 
 ```bash
 cd ../odoo
 ```
 
-13; Provide your environment variables in the .env
+14; Provide your environment variables in the .env
 
 ```bash
 mv .env.example .env && nano .env
 ```
 
-14; Change your PostgreSQL database password
+15; Change your PostgreSQL database password
 
 ```bash
 nano odoo_pg_pass
 ```
 
-15; Spin up the servers
+16; Spin up the containers
 
 ```bash
 docker-compose up -d
+```
+
+17; Now visit crm.yourdomain
