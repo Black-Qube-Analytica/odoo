@@ -8,8 +8,8 @@ networks:
 
 services:
   web:
-    image: odoo:14.0
-    container_name: work-boxx-app
+    image: odoo:latest
+    container_name: odoo-app
     depends_on:
       - db
     ports:
@@ -22,7 +22,7 @@ services:
     secrets:
       - postgresql_password
     labels:
-      - traefik.http.routers.blog.rule=Host(`${BOXX_APP_URL}`)
+      - traefik.http.routers.blog.rule=Host(`${ODOO_APP_URL}`)
       - traefik.http.routers.blog.tls=true
       - traefik.http.routers.blog.tls.certresolver=lets-encrypt
       - traefik.port=8069
@@ -32,7 +32,7 @@ services:
       
   db:
     image: postgres:13
-    container_name: work-boxx-db
+    container_name: odoo-db
     restart: always
     environment:
       - POSTGRES_DB=postgres
@@ -48,7 +48,7 @@ services:
       - web
 
   pgadmin:
-    container_name: work-boxx-pgadmin
+    container_name: odoo-pgadmin
     image: dpage/pgadmin4
     depends_on:
       - db
@@ -59,7 +59,7 @@ services:
     volumes:
       - pgadmin:/var/lib/pgadmin
     labels:
-      - traefik.http.routers.adminer.rule=Host(`${BOXX_DB_ADMIN_URL}`)
+      - traefik.http.routers.adminer.rule=Host(`${ODOO_DB_ADMIN_URL}`)
       - traefik.http.routers.adminer.tls=true
       - traefik.http.routers.adminer.tls.certresolver=lets-encrypt
       - traefik.port=5050
