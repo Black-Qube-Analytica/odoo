@@ -20,7 +20,7 @@ mkdir -p apps/{odoo,net}
 2; Clone the repo inside the odoo directory
 
 ```bash
-cd apps/odoo && git clone https://github.com/Black-Qube-Analytica/odoo.git .
+cd apps/odoo && git clone https://github.com/Black-Qube-Analytica/odoo-docker-traefik.git .
 ```
 
 3; Move the net directory contents (found in the odoo dir) to net dir created above
